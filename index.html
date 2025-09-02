@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Avatar</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #avatar {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      background: url("https://i.ibb.co/YB6zCHt/anime-avatar.png") no-repeat center/cover;
+      border-radius: 50%;
+      animation: walk 4s infinite alternate;
+    }
+    @keyframes walk {
+      0% { transform: translateX(-50px); }
+      100% { transform: translateX(50px); }
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Avatar</h1>
+  <div id="avatar"></div>
+  <div>
+    <input id="userInput" type="text" placeholder="Say something..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+  <div id="chat"></div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chatDiv = document.getElementById("chat");
+      const message = input.value;
+      if (!message) return;
+
+      chatDiv.innerHTML += `<p><b>You:</b> ${message}</p>`;
+
+      const res = await fetch("https://YOUR-RENDER-BACKEND.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      chatDiv.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
